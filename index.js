@@ -7,11 +7,12 @@ import CourseRoutes from "./Kanbas/Courses/routes.js";
 import ModuleRoutes from "./Kanbas/Modules/routes.js";
 const app = express();
 UserRoutes(app);
-app.use(cors({credentials: true,
-    origin: process.env.NETLIFY_URL || "http://localhost:3000",}));
-      app.use(
-        session(sessionOptions)
-      );
+app.use(
+    cors({
+      credentials: true,
+      origin: process.env.NETLIFY_URL || "http://localhost:3000",
+    })
+   );
       
 app.use(express.json());
 Lab5(app);
@@ -23,19 +24,20 @@ app.use(
   })
 );
 const sessionOptions = {
-  secret: process.env.SESSION_SECRET || "kanbas",
-  resave: false,
-  saveUninitialized: false,
-};
-if (process.env.NODE_ENV !== "development") {
-  sessionOptions.proxy = true;
-  sessionOptions.cookie = {
-    sameSite: "none",
-    secure: true,
-    domain: process.env.NODE_SERVER_DOMAIN,
+    secret: process.env.SESSION_SECRET || "kanbas",
+    resave: false,
+    saveUninitialized: false,
   };
-}
-app.use(session(sessionOptions));
+  
+  if (process.env.NODE_ENV !== "development") {
+    sessionOptions.proxy = true;
+    sessionOptions.cookie = {
+      sameSite: "none",
+      secure: true,
+      domain: process.env.NODE_SERVER_DOMAIN,
+    };
+  }
+  app.use(session(sessionOptions));
 CourseRoutes(app);
 ModuleRoutes(app);
 app.listen(4000);
